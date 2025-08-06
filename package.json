@@ -1,0 +1,28 @@
+{
+  "name": "codilab",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@apostrophecms/mongodb-snapshot": "^1.1.0",
+    "bcrypt": "^6.0.0",
+    "check-disk-space": "^3.4.0",
+    "connect-mongo": "^5.1.0",
+    "dotenv": "^16.5.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.0.1",
+    "express-session": "^1.18.1",
+    "form-data": "^4.0.3",
+    "mongoose": "^8.15.2",
+    "multer": "^2.0.1",
+    "node-7z": "^3.0.0",
+    "node-cron": "^4.1.0"
+  }
+}

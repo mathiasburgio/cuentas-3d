@@ -1,0 +1,22 @@
+{
+    "usuarios": [
+        {
+            "id": 1,
+            "nombre": "Mathi",
+            "email": "mathi@example.com",
+            "contrasena": "123456"
+        },
+        {
+            "id": 2,
+            "nombre": "Giu",
+            "email": "giu@example.com",
+            "contrasena": "abcdef"
+        }
+    ],
+    "costos": {
+        "filamentoKg": 17000,
+        "electricoKwh": 164.92,
+        "porcentajeReinversion": 20
+    },
+    "metodosDeCobro": ["Efectivo Mathi", "MercadoPago Mathi", "Efectivo Giu", "Cta Dni Giu", "MercadoPago Giu"]
+}

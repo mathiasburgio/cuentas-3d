@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codilab - Index</title>
+    <link rel="icon" href="/resources/favicon.jpg" type="image/jpg">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
+        <a class="navbar-brand" href="#">Codilab</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/trabajos">Trabajos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/resumen">Resumen</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/archivos">Archivos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-danger" href="/usuarios/cerrar-sesion">Cerrar sesión</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-3">
+        <h2>Trabajos</h2>
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        Listado
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col">
+                                <button class="btn btn-block btn-light" name="nuevo"><i class="fas fa-plus"></i> Nuevo</button>
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-block btn-light" name="modificar"><i class="fas fa-edit"></i> Modificar</button>
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-block btn-warning" name="cerrar"><i class="fas fa-lock"></i> Cerrar</button>
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-block btn-warning" name="calculadora-costos"><i class="fas fa-calculator"></i> Calculadora</button>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control" autocomplete="off" placeholder="Buscar..." name="buscar">
+                    
+                        <div class="border mt-3" style="height: 75vh; overflow-y: scroll;">
+                            <table class="table table-sm mb-0" name="tabla-trabajos">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th></th>
+                                        <th class="text-right">Fecha</th>
+                                        <th>Nombre</th>
+                                        <th class="text-right">F. entrega</th>
+                                        <th class="text-right">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="100%">
+                                            <button class="btn btn-primary btn-block btn-sm" disabled>Cargar más</button>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs" id="menu-tab" role="tablist">
+                            <li class="nav-item">
+                                <button class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Datos</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" id="cobros-tab" data-toggle="tab" data-target="#cobros" type="button" role="tab" aria-controls="cobros" aria-selected="false">Cobros</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" id="costos-tab" data-toggle="tab" data-target="#costos" type="button" role="tab" aria-controls="costos" aria-selected="false">Costos</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" id="historial-tab" data-toggle="tab" data-target="#historial" type="button" role="tab" aria-controls="historial" aria-selected="false">Historial</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" id="archivos-tab" data-toggle="tab" data-target="#archivos" type="button" role="tab" aria-controls="archivos" aria-selected="false">Archivos</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body" name="datos">
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <div class="form-group">
+                                    <label for="">Fecha</label>
+                                    <input name="fecha" type="date" autocomplete="off" class="form-control form-control-sm">
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Estado</label>
+                                    <select name="estado" type="text" autocomplete="off" class="form-control form-control-sm">
+                                        <option value="presupuesto">Presupuesto</option>
+                                        <option value="en_proceso">En Proceso</option>
+                                        <option value="completado">Completado</option>
+                                        <option value="entregado">Entregado</option>
+                                        <option value="cancelado">Cancelado</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Nombre</label>
+                                    <input name="nombre" type="text" autocomplete="off" class="form-control form-control-sm">
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Descripción</label>
+                                    <input name="descripcion" type="text" autocomplete="off" class="form-control form-control-sm">
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Fecha de entrega</label>
+                                    <input name="fechaEntrega" type="date" autocomplete="off" class="form-control form-control-sm">
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Cantidad</label>
+                                    <input name="cantidad" type="number" autocomplete="off" class="form-control form-control-sm">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="">Nombre del cliente</label>
+                                    <input name="cliente.nombre" type="text" autocomplete="off" class="form-control form-control-sm">
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Teléfono del cliente</label>
+                                    <input name="cliente.telefono" type="text" autocomplete="off" class="form-control form-control-sm">
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="">Precio x unidad</label>
+                                            <input name="precioPorUnidad" type="number" autocomplete="off" class="form-control form-control-sm">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Peso filamento (x unidad en gramos)</label>
+                                            <input name="pesoFilamentoUnidad" type="number" autocomplete="off" class="form-control form-control-sm">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Tiempo impresion (x unidad en min)</label>
+                                            <input name="tiempoImpresionUnidad" type="number" autocomplete="off" class="form-control form-control-sm">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="">Precio total</label>
+                                            <input name="precioTotal" type="number" autocomplete="off" class="form-control form-control-sm">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Peso filamento (total en gramos)</label>
+                                            <input name="pesoFilamentoTotal" type="number" autocomplete="off" class="form-control form-control-sm">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Tiempo impresion (total en min)</label>
+                                            <div class="input-group">
+                                                <input name="tiempoImpresionTotal" type="number" autocomplete="off" class="form-control form-control-sm">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-warning btn-sm" name="calcular-horas-a-minutos"><i class="fas fa-clock"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-right">
+                                    <button class="btn btn-primary" name="guardar"><i class="fas fa-save"></i> Guardar</button>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="cobros" role="tabpanel" aria-labelledby="cobros-tab">
+                                <button class="btn btn-success mb-3" name="agregarCobro"><i class="fas fa-plus"></i> Agregar cobro</button>
+                                <div class="border">
+                                    <table class="table table-sm mb-0" name="tabla-cobros">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Metodo</th>
+                                                <th class="text-right">Monto</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                        <tfoot class="text-right table-info font-weight-bold">
+                                            <tr>
+                                                <td colspan="100%">Total: $0</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <small class="text-muted">*Los cobros se reflejan en el resumen</small>
+                            </div>
+                            <div class="tab-pane fade" id="costos" role="tabpanel" aria-labelledby="costos-tab">
+                                <button class="btn btn-success mb-3" name="agregarCosto"><i class="fas fa-plus"></i> Agregar costo</button>
+                                <div class="border">
+                                    <table class="table table-sm mb-0" name="tabla-costos">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>Detalle</th>
+                                                <th class="text-right">X unidad</th>
+                                                <th class="text-right">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                        <tfoot class="text-right  font-weight-bold">
+                                            <tr>
+                                                <td colspan="2" name="costo-unidad">Costo: <span>$0</span></td>
+                                                <td name="costo-total">Costo: <span>$0</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2" name="venta-unidad">Venta: <span>$0</span></td>
+                                                <td name="venta-total">Venta: <span>$0</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2" name="ganancia-unidad">Ganancia: <span>$0</span></td>
+                                                <td name="ganancia-total">Ganancia: <span>$0</span></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>    
+                                </div>
+                                <small class="text-muted">*Agregar caja, calcomanias, cadenitas, etc.</small>
+                            </div>
+                            <div class="tab-pane fade" id="historial" role="tabpanel" aria-labelledby="historial-tab">
+                                <button class="btn btn-success mb-3" name="agregarRegistroHistorial"><i class="fas fa-plus"></i> Agregar registro</button>
+                                <div class="border">
+                                    <table class="table table-sm mb-0" name="tabla-historial">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Estado</th>
+                                                <th>Observaciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="archivos" role="tabpanel" aria-labelledby="archivos-tab">
+                                <button class="btn btn-success mb-3" name="agregarArchivo"><i class="fas fa-plus"></i> Agregar archivo</button>
+                                <div class="border">
+                                    <table class="table table-sm mb-0" name="tabla-archivos">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Detalle</th>
+                                                <th class="text-right">Descargar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                                <small class="text-muted">*Al cancelar un archivo registrarlo en el historial</small>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modales" class="d-none">
+        <div id="modal-cobro">
+            <div class="form-group">
+                <label for="">Fecha</label>
+                <input name="fecha" type="date" autocomplete="off" class="form-control form-control-sm">
+            </div>
+            <div class="form-group">
+                <label for="">Monto</label>
+                <div class="input-group input-group-sm">
+                    <input name="monto" type="number" autocomplete="off" class="form-control form-control-sm">
+                    <div class="input-group-append">
+                        <button class="btn btn-warning" name="autocompletar"><i class="fas fa-magic"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="">Método de cobro</label>
+                <select name="metodo" class="form-control form-control-sm">
+                </select>
+            </div>
+            <div class="text-right">
+                <button class="btn btn-primary" name="guardarCobro">Guardar</button>
+            </div>
+        </div>
+        <div id="modal-subir-archivo">
+            <div class="form-group">
+                <label for="">Archivo</label>
+                <input type="file" name="archivo" class="form-control-file form-control-sm">
+            </div>
+            <div class="form-group">
+                <label for="">Detalle</label>
+                <input name="detalle" type="text" autocomplete="off" class="form-control form-control-sm">
+            </div>
+            <div class="text-right">
+                <button class="btn btn-primary" name="guardarArchivo">Guardar</button>
+            </div>
+        </div>
+        <div id="modal-agregar-costo">
+            <div class="form-group">
+                <label for="">Detalle</label>
+                <input name="detalle" type="text" autocomplete="off" class="form-control form-control-sm">
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="">Costo por unidad</label>
+                        <input name="costoPorUnidad" type="number" autocomplete="off" class="form-control form-control-sm">
+                        <small class="text-muted">Cadenita, iman, nfc, etc.</small>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="">Costo total</label>
+                        <input name="costoTotal" type="number" autocomplete="off" class="form-control form-control-sm">
+                        <small class="text-muted">Caja, calcomania, etc.</small>
+                    </div>
+                </div>
+            </div>
+            <div class="text-right">
+                <button class="btn btn-primary" name="guardarRegistro">Guardar</button>
+            </div>
+        </div>
+        <div id="modal-calculadora-costos" class="d-none">
+            <div class="form-group">
+                <label for="">Cantidad</label>
+                <input name="cantidad" type="number" autocomplete="off" class="form-control form-control-sm">
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="">Precio por unidad ($)</label>
+                        <input name="precioPorUnidad" type="number" autocomplete="off" class="form-control form-control-sm">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Minutos por unidad</label>
+                        <input name="minutosPorUnidad" type="number" autocomplete="off" class="form-control form-control-sm">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Peso por unidad (gramos)</label>
+                        <input name="pesoPorUnidad" type="number" autocomplete="off" class="form-control form-control-sm">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="">Precio total ($)</label>
+                        <input name="precioTotal" type="number" autocomplete="off" class="form-control form-control-sm">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Minutos totales</label>
+                        <div class="input-group">
+                            <input name="minutosTotales" type="number" autocomplete="off" class="form-control form-control-sm">
+                            <div class="input-group-append">
+                                <button class="btn btn-warning btn-sm" name="calcular-horas-a-minutos"><i class="fas fa-clock"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Peso total (gramos)</label>
+                        <input name="pesoTotal" type="number" autocomplete="off" class="form-control form-control-sm">
+                    </div>
+                </div>
+            </div>
+
+            <div class="border">
+                <table class="table table-sm mb-0">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Detalle</th>
+                            <th class="text-right">Unidad</th>
+                            <th class="text-right">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot class="table-info text-right font-weight-bold">
+                        <tr>
+                            <td>Costo</td>
+                            <td class="text-monospace">0</td>
+                            <td class="text-monospace">0</td>
+                        </tr>
+                        <tr>
+                            <td>P. venta</td>
+                            <td class="text-monospace">0</td>
+                            <td class="text-monospace">0</td>
+                        </tr>
+                        <tr>
+                            <td>Ganancia</td>
+                            <td class="text-monospace">0</td>
+                            <td class="text-monospace">0</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+    
+    <script src="resources/Modal2.js"></script>
+    <script src="resources/Fechas.js"></script>
+    <script src="resources/Utils.js"></script>
+    
+    <script src="js/Trabajos.js"></script>
+    <script>
+        var modal = new Modal();
+        var fechas = new Fechas();
+        var utils = new Utils();
+        var trabajos = null;
+
+        window.onload = () => {
+            trabajos = new Trabajos(true);
+        }
+    </script>
+</body>
+</html>
