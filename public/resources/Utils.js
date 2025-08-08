@@ -202,7 +202,7 @@ class Utils{
             });
         })
     }
-    uploadFileWithProgress({url, file, onProgress, onFinish}){
+    uploadFileWithProgress({url, file, props, onProgress, onFinish}){
         const xhr = new XMLHttpRequest();
     
         xhr.open("POST", url, true);
@@ -228,6 +228,9 @@ class Utils{
     
         const formData = new FormData();
         formData.append("file", file);
+        for(let prop in props){
+            formData.append(prop, props[prop]);
+        }
         
         xhr.send(formData);
     }

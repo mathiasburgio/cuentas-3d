@@ -30,7 +30,7 @@ router.post("/trabajos/agregar-registro-historial/:trabajoId",
 
 router.post("/trabajos/agregar-archivo/:trabajoId", 
     middlewares.verificarPermisos,
-    uploader.upload.single("archivo"),
+    uploader.upload.single("file"),
     trabajosController.agregarArchivo);
 
 router.post("/trabajos/agregar-costo/:trabajoId",

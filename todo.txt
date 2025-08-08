@@ -1,0 +1,3 @@
+-agregar todo list
+-editar grupo, nombre y detalle de archivos
+-que un modelo pueda tener varias partes y que el peso y tiempo sea la suma de todas sus partes. Ej vaso + tapa

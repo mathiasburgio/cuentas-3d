@@ -35,6 +35,7 @@ let directories = [
     path.join(__dirname, "uploads"),
     path.join(__dirname, "uploads", "temp"),
     path.join(__dirname, "uploads", "files3d"),
+    path.join(__dirname, "uploads", "backups"),
 ];
 directories.forEach(directory=>{
     if(fs.existsSync(directory) == false) fs.mkdirSync( directory )

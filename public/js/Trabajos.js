@@ -390,12 +390,27 @@ class Trabajos{
             if(!archivo) return modal.addPopover({querySelector: ele, message: "Archivo no válido"});
             if(!detalle || detalle.length < 3) return modal.addPopover({querySelector: ele, message: "Detalle no válido"});
 
-            let formData = new FormData();
+            /* let formData = new FormData();
             formData.append("archivo", archivo);
-            formData.append("detalle", detalle);
+            formData.append("detalle", detalle); */
 
-            let resp = await $.post({
+            utils.uploadFileWithProgress({
                 url: `/trabajos/agregar-archivo/${this.trabajoActual._id}`,
+                file: archivo,
+                props: {detalle},
+                onProgress: (progress) => {
+                    modal.waiting2(true, "Subiendo archivo..." + parseInt(progress || 0) + "%");
+                },
+                onFinish: async (error, response) => {
+                    modal.waiting2(false);
+                    if(typeof response === "string") response = JSON.parse(response);
+                    console.log(response);
+                    this.trabajoActual.archivos = response.archivos;
+                    this.listarArchivos();
+                    modal.hide();
+                }
+            });
+            /* let resp = await $.post({
                 data: formData,
                 processData: false,
                 contentType: false
@@ -403,7 +418,7 @@ class Trabajos{
             console.log(resp);
             this.trabajoActual.archivos = resp.archivos;
             this.listarArchivos();
-            modal.hide();
+            modal.hide(); */
         });
     }
     listarArchivos(){

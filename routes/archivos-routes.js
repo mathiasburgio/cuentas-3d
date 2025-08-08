@@ -18,7 +18,7 @@ router.post("/archivos/crear-proyecto",
 
 router.post("/archivos/subir-archivo/:proyectoId",
     middlewares.verificarPermisos,
-    uploader.upload.single("archivo"),
+    uploader.upload.single("file"),
     archivosController.subirArchivo);
 
 module.exports = router;
