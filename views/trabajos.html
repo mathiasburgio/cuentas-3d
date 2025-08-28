@@ -60,7 +60,22 @@
                                 <button class="btn btn-block btn-warning" name="calculadora-costos"><i class="fas fa-calculator"></i> Calculadora</button>
                             </div>
                         </div>
-                        <input type="text" class="form-control" autocomplete="off" placeholder="Buscar..." name="buscar">
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="dropdown">
+                                    <a class="btn btn-block btn-light dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+                                        Filtro
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#" name="filtro-ultimos-trabajos">Últimos trabajos</a>
+                                        <a class="dropdown-item" href="#" name="filtro-seleccionar-anio-mes">Seleccionar año/mes</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-9">
+                                <input type="text" class="form-control" autocomplete="off" placeholder="Buscar..." name="buscar">
+                            </div>
+                        </div>
                     
                         <div class="border mt-3" style="height: 75vh; overflow-y: scroll;">
                             <table class="table table-sm mb-0" name="tabla-trabajos">
@@ -133,14 +148,16 @@
                                     <input name="descripcion" type="text" autocomplete="off" class="form-control form-control-sm">
                                 </div>
                                 <div class="form-group">
-                                    <label for="">Fecha de entrega</label>
-                                    <input name="fechaEntrega" type="date" autocomplete="off" class="form-control form-control-sm">
+                                    <label for="">Categoría</label>
+                                    <div class="input-group input-group-sm">
+                                        <select name="categoria" class="form-control form-control-sm">
+                                            <option value="sin asignar" selected>sin asignar</option>
+                                        </select>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-warning" name="crear-categoria"><i class="fas fa-plus"></i></button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="">Cantidad</label>
-                                    <input name="cantidad" type="number" autocomplete="off" class="form-control form-control-sm">
-                                </div>
-                                
                                 <div class="form-group">
                                     <label for="">Nombre del cliente</label>
                                     <input name="cliente.nombre" type="text" autocomplete="off" class="form-control form-control-sm">
@@ -148,6 +165,14 @@
                                 <div class="form-group">
                                     <label for="">Teléfono del cliente</label>
                                     <input name="cliente.telefono" type="text" autocomplete="off" class="form-control form-control-sm">
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Fecha de entrega</label>
+                                    <input name="fechaEntrega" type="date" autocomplete="off" class="form-control form-control-sm">
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Cantidad</label>
+                                    <input name="cantidad" type="number" autocomplete="off" class="form-control form-control-sm">
                                 </div>
                                 <div class="row">
                                     <div class="col-6">
@@ -181,6 +206,16 @@
                                                     <button class="btn btn-warning btn-sm" name="calcular-horas-a-minutos"><i class="fas fa-clock"></i></button>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="">Imagen</label>
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" name="imagen-trabajo">
+                                        <div class="input-group-append" name="popover-imagen">
+                                             <span class="input-group-text"><i class="fas fa-image"></i></span>
                                         </div>
                                     </div>
                                 </div>
@@ -238,7 +273,14 @@
                                         </tfoot>
                                     </table>    
                                 </div>
-                                <small class="text-muted">*Agregar caja, calcomanias, cadenitas, etc.</small>
+                                <div class="row">
+                                    <div class="col">
+                                        <small class="text-muted">*Agregar caja, calcomanias, cadenitas, etc.</small>
+                                    </div>
+                                    <div class="col-auto">
+                                        <small class="text-success" name="margen-ganancia">Margen: 0%</small>
+                                    </div>
+                                </div>
                             </div>
                             <div class="tab-pane fade" id="historial" role="tabpanel" aria-labelledby="historial-tab">
                                 <button class="btn btn-success mb-3" name="agregarRegistroHistorial"><i class="fas fa-plus"></i> Agregar registro</button>
@@ -422,6 +464,7 @@
     <script src="resources/Modal2.js"></script>
     <script src="resources/Fechas.js"></script>
     <script src="resources/Utils.js"></script>
+    <script src="resources/SimpleImagine.js"></script>
     
     <script src="js/Trabajos.js"></script>
     <script>

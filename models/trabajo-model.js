@@ -7,6 +7,7 @@ const trabajoSchema = new mongoose.Schema({
     fecha: Date,
     nombre: String,
     descripcion: String, // Descripción del trabajo
+    categoria: String, // Ej. Llaveros, Figuras, Prototipos, etc.
     estado: String, // Presupuesto, En Proceso, Completado, Entregado, Cancelado
     fechaEntrega: Date, // fecha en la cual se debe entregar el trabajo
     cantidad: Number, // ej. 100 (medallas)
@@ -43,6 +44,7 @@ const trabajoSchema = new mongoose.Schema({
         detalle: String,
         cancelado: Boolean // Indica si el archivo fue cancelado o eliminado
     }],
+    imagen: String,
     cerrado: Boolean, // Indica si el trabajo está cerrado (no se pueden agregar más cobros o registros)
 }, { timestamps: true });
 

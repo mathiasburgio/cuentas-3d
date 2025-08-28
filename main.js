@@ -35,6 +35,7 @@ let directories = [
     path.join(__dirname, "uploads"),
     path.join(__dirname, "uploads", "temp"),
     path.join(__dirname, "uploads", "files3d"),
+    path.join(__dirname, "uploads", "images"),
     path.join(__dirname, "uploads", "backups"),
 ];
 directories.forEach(directory=>{
@@ -55,6 +56,7 @@ app.use("/css", express.static( path.join(__dirname, "/public/css") ));
 app.use("/js", express.static( path.join(__dirname + "/public/js") ));
 app.use("/resources", express.static( path.join(__dirname + "/public/resources") ));
 app.use("/files3d", express.static( path.join(__dirname + "/uploads/files3d") ));
+app.use("/images", express.static( path.join(__dirname + "/uploads/images") ));
 
 // Registro las rutas
 app.use( require("./routes/home-routes") );

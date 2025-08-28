@@ -4,6 +4,7 @@ class Trabajos{
         this.listadoTrabajos = [];
         this.trabajoActual = null;
         
+        this.imagenTrabajo = null;
         this.accion = null;
         if(inicializar) this.init();
     }
@@ -14,9 +15,12 @@ class Trabajos{
         $("[name='nuevo']").on("click", (e) => {
             this.limpiarTodo();
             this.accion = "nuevo";
+            this.imagenTrabajo = null;
 
             $("[name='fecha']").val(fechas.getNow(false));
             $("[name='fechaEntrega']").val(fechas.getNow(false));
+            $("[name='estado']").val("presupuesto");
+            $("[name='categoria']").val("sin asignar");
             $("[name='nuevo']").addClass("btn-primary").removeClass("btn-light");
             $("[name='modificar']").removeClass("btn-primary").addClass("btn-light");
 
@@ -133,10 +137,52 @@ class Trabajos{
             this.modalCalculadoraCostos();
         });
 
+        $("[name='crear-categoria']").on("click", async ev=>{
+            let prompt = await modal.prompt({label: "Categoría"});
+            if(!prompt) return;
+            if(prompt.length < 3) return modal.message("Categoría no válida");
+            $("[name='categoria']").append(`<option value="${prompt}">${prompt}</option>`);
+            $("[name='categoria']").val(prompt);
+        });
+
+        $("[name='filtro-ultimos-trabajos']").on("click", ev=>{
+            let ele = $(ev.currentTarget);
+            this.obtenerTrabajos(1, -1)
+        });
+
+        $("[name='filtro-seleccionar-anio-mes']").on("click", async ev=>{
+            let [anio, mes] = fechas.getNow(false).split("-");
+            let prompt = await modal.prompt({label: "Seleccionar mes", type: "month", value: (anio + "-" + mes)});
+            if(!prompt) return;
+            this.obtenerTrabajos(1, prompt + "-05");
+        });
+
+        $("[name='imagen-trabajo']").on("change", async ev=>{
+            let file = ev.target.files[0];
+            if(!file) return;
+            if(file.type.indexOf("image/") != 0) return modal.message("El archivo debe ser una imagen válida");
+            let resizer = new SimpleImagine({maxWidth: 800, maxHeight: 800, maxSize: (5 * 1024 * 1024)});
+            let newFile = await resizer.resize({val: file});
+            //console.log(newFile);
+            let resp = await utils.uploadFile("/trabajos/subir-imagen", newFile);
+            this.imagenTrabajo = resp;
+        });
+
+        $("[name='popover-imagen']").popover({
+            content: ()=>{
+                let src = "/images/" + this.imagenTrabajo;
+                if(!this.imagenTrabajo) src = "/resources/sin-imagen.jpg";
+                return "<img src='" + src + "' class='img-fluid'>";
+            },
+            html: true,
+            trigger: "hover"
+        })
+
+
         this.obtenerTrabajos();
     }
-    async obtenerTrabajos(pagina = 1){
-        let resp = await $.get(`/trabajos/obtener-trabajos/${pagina}`);
+    async obtenerTrabajos(pagina = 1, fechaMes = -1){
+        let resp = await $.get(`/trabajos/obtener-trabajos/${pagina}/${fechaMes}`);
         this.listadoTrabajos = resp;
         this.listarTrabajos();
     }
@@ -149,16 +195,18 @@ class Trabajos{
         this.listadoTrabajos.filter(trabajo => {
             return trabajo.nombre.toLowerCase().includes(palabra) || 
             trabajo.cliente.nombre.toLowerCase().includes(palabra);
-        }).forEach(trabajo => {
+        })
+        .sort((a, b) => b.fecha.toString().localeCompare(a.fecha.toString()))
+        .forEach(trabajo => {
 
 
             let sumaCobros = trabajo.cobros?.reduce((acc, cobro) => acc + cobro.monto, 0) || 0;
             let color = "light";
             if(parseInt(sumaCobros) == parseInt(trabajo.precioPorUnidad * trabajo.cantidad)) color = "success";
             else if(sumaCobros > 0 && parseInt(sumaCobros) < parseInt(trabajo.precioPorUnidad * trabajo.cantidad)) color = "warning";
-            console.log(sumaCobros, trabajo.precioPorUnidad * trabajo.cantidad, color);
+            //console.log(sumaCobros, trabajo.precioPorUnidad * trabajo.cantidad, color);
 
-            tbody += `<tr _id="${trabajo._id}">
+            tbody += `<tr _id="${trabajo._id}" class='cp'>
                 <td><i class='fas fa-${trabajo.cerrado ? "lock text-danger" : "lock-open"}'></i></td>
                 <td class='text-right'>${trabajo.fecha ? fechas.parse2(trabajo.fecha, "USA_FECHA") : "?"}</td>
                 <td>${trabajo.nombre}</td>
@@ -178,8 +226,7 @@ class Trabajos{
             let trabajoId = tr.attr("_id");
             this.trabajoActual = this.listadoTrabajos.find(t => t._id === trabajoId);
             if(!this.trabajoActual) return;
-
-            
+            this.imagenTrabajo = this.trabajoActual.imagen;
 
             this.accion = "modificar";
             $("[name='nuevo']").removeClass("btn-primary").addClass("btn-light");
@@ -197,6 +244,9 @@ class Trabajos{
             this.listarCostos();
         });
 
+
+        let optCategorias = utils.getOptions({ar: this.listadoTrabajos, text: "categoria" });
+        $("[name='categoria']").html(`<option value='sin asignar'>sin asignar</option>` + optCategorias);
     }
     async guardarTrabajo(){
         try{
@@ -217,15 +267,18 @@ class Trabajos{
             console.log(data);
             if(!data.fecha) throw "Fecha no válida";
             if(!data.nombre || data.nombre.length < 3) throw "Nombre del trabajo no válido";
-            if(!data.descripcion || data.descripcion.length < 3) throw "Descripción del trabajo no válida";
+            //if(!data.descripcion || data.descripcion.length < 3) throw "Descripción del trabajo no válida";
             if(!data.estado || data.estado.length < 3) throw "Estado del trabajo no válido";
             if(!data.fechaEntrega) throw "Fecha de entrega no válida";
             if(!data.cantidad || isNaN(data.cantidad)) throw "Cantidad no válida";
             if(!data.precioPorUnidad || isNaN(data.precioPorUnidad)) throw "Precio no válido";
             if(!data.cliente.nombre || data.cliente.nombre.length < 3) throw "Nombre del cliente no válido";
-            if(!data.cliente.telefono || data.cliente.telefono.length < 3) throw "Teléfono del cliente no válido";
+            //if(!data.cliente.telefono || data.cliente.telefono.length < 3) throw "Teléfono del cliente no válido";
     
-    
+            data.fecha = data.fecha + "T08:00";
+            data.fechaEntrega = data.fechaEntrega + "T08:00";
+            data.imagen = this.imagenTrabajo;
+
             let resp = await $.post({
                 url: "/trabajos/guardar-trabajo" + (this.accion === "modificar" ? `/${this.trabajoActual._id}` : ""),
                 data: JSON.stringify(data),
@@ -250,6 +303,7 @@ class Trabajos{
         $("[name='datos'] input, [name='datos'] select").each((i, input) => {
             let name = $(input).attr("name");
             if($(input).attr("type") === "date") return;
+            if($(input).attr("type") === "file") return;
 
             if(name && this.trabajoActual[name] !== undefined){
                 $(input).val(this.trabajoActual[name]);
@@ -260,6 +314,7 @@ class Trabajos{
         $("[name='datos'] [name='fechaEntrega']").val(fechas.parse2(this.trabajoActual.fechaEntrega, "USA_FECHA"));
         $("[name='datos'] [name='cliente.nombre']").val(this.trabajoActual.cliente.nombre);
         $("[name='datos'] [name='cliente.telefono']").val(this.trabajoActual.cliente.telefono);
+        $("[name='datos'] [name='categoria']").val(this.trabajoActual.categoria);
         $("[name='datos'] [name='precioPorUnidad']").change();
         $("[name='datos'] [name='pesoFilamentoUnidad']").change();
         $("[name='datos'] [name='tiempoImpresionUnidad']").change();
@@ -334,7 +389,8 @@ class Trabajos{
                 if(!metodo || metodo.trim().length < 3) return modal.addPopover({querySelector: ele, message: "Método no válido"});
     
                 if(monto > (montoTrabajo - montoCobrado)) return modal.addPopover({querySelector: ele, message: "El monto no puede ser mayor al adeudado"});
-
+                fecha = fecha + "T08:00";
+                
                 let resp = await $.post({
                     url: `/trabajos/agregar-cobro/${this.trabajoActual._id}`,
                     data: {fecha, monto, metodo},
@@ -526,6 +582,9 @@ class Trabajos{
         let gananciaUnidad = this.trabajoActual.precioPorUnidad - costoUnidad;
         $("[name='tabla-costos'] tfoot [name='ganancia-unidad'] span").html("$" + utils.formatNumber(gananciaUnidad));
         $("[name='tabla-costos'] tfoot [name='ganancia-total'] span").html("$" + utils.formatNumber(gananciaUnidad * this.trabajoActual.cantidad));
+
+        let margenGanancia = (gananciaUnidad / costoUnidad * 100) || 0;
+        $("[name='margen-ganancia']").html("Margen: " + margenGanancia.toFixed(2) + " %");
     }
 
     limpiarTodo(){

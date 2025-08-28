@@ -10,10 +10,23 @@ function obtenerVista(req, res){
 
 async function obtenerTrabajos(req, res){
     try {
-        let pagina = parseInt(req.params.pagina) || 1;
+        let {pagina, fechaMes} = req.params;
+        pagina = parseInt(pagina) || 1;
         const trabajosPorPagina = 100; // Definir cuántos trabajos mostrar por página
+        let query = {};
 
-        const trabajos = await Trabajo.find()
+        if(fechaMes != "-1"){
+            let desde = new Date(fechaMes);
+            desde.setDate(1);
+            desde.setHours(0, 0, 0, 0);
+    
+            let hasta = new Date(fechaMes);
+            hasta.setMonth(hasta.getMonth() + 1);
+            hasta.setDate(1);
+            hasta.setHours(0, 0, 0, 0);
+            query = {fecha: {$gte: desde, $lt: hasta}};
+        }
+        const trabajos = await Trabajo.find(query)
             .skip((pagina - 1) * trabajosPorPagina)
             .limit(trabajosPorPagina)
             .sort({ fecha: -1 }); // Ordenar por fecha descendente
@@ -208,6 +221,22 @@ async function cerrarTrabajo(req, res){
     }
 }
 
+async function subirImagen(req, res){
+    try{
+        if(!req.file) throw new Error("Archivo no válido");
+
+        let ext = req.file.originalname.split(".").pop();
+        if(["jpg", "jpeg", "png"].includes(ext.toLowerCase()) == false) throw new Error("Solo se permiten imágenes JPG, JPEG o PNG");
+        const oldPath = path.join(__dirname, "../uploads/temp/", req.file.filename);
+        const newPath = path.join(__dirname, "../uploads/images/", req.file.filename);
+        await fs.promises.rename(oldPath, newPath);
+        res.status(200).json(req.file.filename);
+    }catch(error){
+        console.error("Error al subir el archivo:", error);
+        res.status(500).end(error.toString());
+    }
+}
+
 module.exports = {
     obtenerVista,
     obtenerTrabajos,
@@ -216,5 +245,6 @@ module.exports = {
     agregarRegistroHistorial,
     agregarArchivo,
     agregarCosto,
-    cerrarTrabajo
+    cerrarTrabajo,
+    subirImagen
 };

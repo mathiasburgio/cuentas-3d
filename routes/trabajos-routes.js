@@ -8,7 +8,7 @@ router.get("/trabajos",
     middlewares.verificarPermisos,
     trabajosController.obtenerVista);
 
-router.get("/trabajos/obtener-trabajos/:pagina", 
+router.get("/trabajos/obtener-trabajos/:pagina/:fechaMes", 
     middlewares.verificarPermisos,
     trabajosController.obtenerTrabajos);
 
@@ -40,5 +40,10 @@ router.post("/trabajos/agregar-costo/:trabajoId",
 router.post("/trabajos/cerrar-trabajo/:trabajoId",
     middlewares.verificarPermisos,
     trabajosController.cerrarTrabajo);
+
+router.post("/trabajos/subir-imagen",
+    middlewares.verificarPermisos,
+    uploader.upload.single("file"),
+    trabajosController.subirImagen);
 
 module.exports = router;
