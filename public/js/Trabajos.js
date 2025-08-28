@@ -294,6 +294,8 @@ class Trabajos{
             }else{
                 Object.assign(this.trabajoActual, data);
             }
+            
+            $("[name='buscar']").val("");
             this.listarTrabajos();
             modal.message("Trabajo guardado correctamente");
         }catch(error){
