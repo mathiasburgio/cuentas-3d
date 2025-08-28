@@ -172,7 +172,7 @@ class Trabajos{
             content: ()=>{
                 let src = "/images/" + this.imagenTrabajo;
                 if(!this.imagenTrabajo) src = "/resources/sin-imagen.jpg";
-                return "<img src='" + src + "' class='img-fluid'>";
+                return "<div class='popover-img-container'><img src='" + src + "'></div>";
             },
             html: true,
             trigger: "hover"
@@ -243,6 +243,22 @@ class Trabajos{
             this.listarArchivos();
             this.listarCostos();
         });
+
+        $("[name='tabla-trabajos'] tbody tr").each((ind, row)=>{
+            let $row = $(row);
+            let trabajo = this.listadoTrabajos.find(t => t._id === $row.attr("_id"));
+            if(!trabajo || !trabajo?.imagen) return;
+            
+            $row.popover({
+                container: "body",
+                content: `<div class="popover-img-container">
+                    <img src="/images/${trabajo.imagen}" alt="${trabajo.nombre}">
+                </div>`,
+                html: true,
+                trigger: "hover",
+                placement: "top"
+            });
+        })
 
         let distinctCategorias = this.listadoTrabajos.reduce((acc, item) => {
             if(item?.categoria && !acc.includes(item.categoria)) acc.push(item.categoria);
