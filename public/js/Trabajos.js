@@ -244,9 +244,12 @@ class Trabajos{
             this.listarCostos();
         });
 
-
-        let optCategorias = utils.getOptions({ar: this.listadoTrabajos, text: "categoria" });
-        $("[name='categoria']").html(`<option value='sin asignar'>sin asignar</option>` + optCategorias);
+        let distinctCategorias = this.listadoTrabajos.reduce((acc, item) => {
+            if(item?.categoria && !acc.includes(item.categoria)) acc.push(item.categoria);
+            return acc;
+        }, []);
+        let optCategorias = utils.getOptions({ar: distinctCategorias, text: "categoria" });
+        $("[name='categoria']").html(optCategorias);
     }
     async guardarTrabajo(){
         try{
