@@ -201,19 +201,23 @@ class Trabajos{
 
 
             let sumaCobros = trabajo.cobros?.reduce((acc, cobro) => acc + cobro.monto, 0) || 0;
-            let color = "light";
-            if(parseInt(sumaCobros) == parseInt(trabajo.precioPorUnidad * trabajo.cantidad)) color = "success";
-            else if(sumaCobros > 0 && parseInt(sumaCobros) < parseInt(trabajo.precioPorUnidad * trabajo.cantidad)) color = "warning";
-            //console.log(sumaCobros, trabajo.precioPorUnidad * trabajo.cantidad, color);
+            let colorCobro = "light";
+            if(parseInt(sumaCobros) == parseInt(trabajo.precioPorUnidad * trabajo.cantidad)) colorCobro = "success";
+            else if(sumaCobros > 0 && parseInt(sumaCobros) < parseInt(trabajo.precioPorUnidad * trabajo.cantidad)) colorCobro = "warning";
+            
+            
+            let colorEstado = "light";
+            if(trabajo.estado == "presupuesto" || trabajo.estado == "en_proceso") colorEstado = "warning";
+            if(trabajo.estado == "completado" || trabajo.estado == "entregado") colorEstado = "success";
+            else if(trabajo.estado == "cancelado") colorEstado = "danger";
 
             tbody += `<tr _id="${trabajo._id}" class='cp'>
                 <td><i class='fas fa-${trabajo.cerrado ? "lock text-danger" : "lock-open"}'></i></td>
-                <td class='text-right'>${trabajo.fecha ? fechas.parse2(trabajo.fecha, "USA_FECHA") : "?"}</td>
-                <td>${trabajo.nombre}</td>
-                <td class='text-right'>${fechas.parse2(trabajo.fechaEntrega, "USA_FECHA")}</td>
+                <td class='text-right'><small>${trabajo.fecha ? fechas.parse2(trabajo.fecha, "USA_FECHA") : "?"}</small></td>
+                <td>${trabajo.nombre} (${trabajo.cliente.nombre})</td>
                 <td class='text-right'>
-                    <span class='badge badge-${color}'>$</span>
-                    <span class='badge badge-info'>${trabajo.estado}</span>
+                    <span class='badge badge-${colorCobro}'>$</span>
+                    <span class='badge badge-${colorEstado}'>${trabajo.estado}</span>
                 </td>
             </tr>`;
         });
