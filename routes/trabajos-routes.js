@@ -46,4 +46,8 @@ router.post("/trabajos/subir-imagen",
     uploader.upload.single("file"),
     trabajosController.subirImagen);
 
+router.get("/trabajos/obtener-meses-activos",
+    middlewares.verificarPermisos,
+    trabajosController.obtenerMesesActivos);
+
 module.exports = router;

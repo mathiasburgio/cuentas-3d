@@ -15,10 +15,8 @@
         }
 
         .popover-img-container img {
-            max-width: 100%;
-            max-height: 100%;
-            height: auto;
-            width: auto;
+            max-width: 150px;
+            max-height: 150px;
         }
         .cp{
             cursor: pointer;
@@ -57,7 +55,7 @@
     <div class="container-fluid mt-3">
         <h2>Trabajos</h2>
         <div class="row">
-            <div class="col">
+            <div class="col-6">
                 <div class="card">
                     <div class="card-header">
                         Listado
@@ -73,7 +71,7 @@
                             <div class="col">
                                 <button class="btn btn-block btn-warning" name="cerrar"><i class="fas fa-lock"></i> Cerrar</button>
                             </div>
-                            <div class="col">
+                            <div class="col d-none">
                                 <button class="btn btn-block btn-warning" name="calculadora-costos"><i class="fas fa-calculator"></i> Calculadora</button>
                             </div>
                         </div>
@@ -86,6 +84,7 @@
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" href="#" name="filtro-ultimos-trabajos">Últimos trabajos</a>
                                         <a class="dropdown-item" href="#" name="filtro-seleccionar-anio-mes">Seleccionar año/mes</a>
+                                        <a class="dropdown-item" href="#" name="filtro-seleccionar-anio-mes-v2">Seleccionar año/mes V2</a>
                                     </div>
                                 </div>
                             </div>
@@ -117,7 +116,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col">
+            <div class="col-6">
                 <div class="card">
                     <div class="card-header">
                         <ul class="nav nav-tabs card-header-tabs" id="menu-tab" role="tablist">
@@ -190,36 +189,39 @@
                                     <label for="">Cantidad</label>
                                     <input name="cantidad" type="number" autocomplete="off" class="form-control form-control-sm">
                                 </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label for="">Precio x unidad</label>
-                                            <input name="precioPorUnidad" type="number" autocomplete="off" class="form-control form-control-sm">
+                                <div class="alert alert-info">
+                                    <button class="btn btn-primary btn-sm mb-2 py-0" name="asignar-placas">Asingar placas</button>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label for="">Precio x unidad</label>
+                                                <input name="precioPorUnidad" type="number" autocomplete="off" class="form-control form-control-sm">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Peso filamento (gr x uni)</label>
+                                                <input name="pesoFilamentoUnidad" type="number" autocomplete="off" class="form-control form-control-sm">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Tiempo impresion (min x uni)</label>
+                                                <input name="tiempoImpresionUnidad" type="number" autocomplete="off" class="form-control form-control-sm">
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="">Peso filamento (x unidad en gramos)</label>
-                                            <input name="pesoFilamentoUnidad" type="number" autocomplete="off" class="form-control form-control-sm">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Tiempo impresion (x unidad en min)</label>
-                                            <input name="tiempoImpresionUnidad" type="number" autocomplete="off" class="form-control form-control-sm">
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label for="">Precio total</label>
-                                            <input name="precioTotal" type="number" autocomplete="off" class="form-control form-control-sm">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Peso filamento (total en gramos)</label>
-                                            <input name="pesoFilamentoTotal" type="number" autocomplete="off" class="form-control form-control-sm">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Tiempo impresion (total en min)</label>
-                                            <div class="input-group">
-                                                <input name="tiempoImpresionTotal" type="number" autocomplete="off" class="form-control form-control-sm">
-                                                <div class="input-group-append">
-                                                    <button class="btn btn-warning btn-sm" name="calcular-horas-a-minutos"><i class="fas fa-clock"></i></button>
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label for="">Precio total</label>
+                                                <input name="precioTotal" type="number" autocomplete="off" class="form-control form-control-sm">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Peso filamento (gr totales)</label>
+                                                <input name="pesoFilamentoTotal" type="number" autocomplete="off" class="form-control form-control-sm">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Tiempo impresion (min totales)</label>
+                                                <div class="input-group">
+                                                    <input name="tiempoImpresionTotal" type="number" autocomplete="off" class="form-control form-control-sm">
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-warning btn-sm" name="calcular-horas-a-minutos"><i class="fas fa-clock"></i></button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -465,6 +467,39 @@
                             <td>Ganancia</td>
                             <td class="text-monospace">0</td>
                             <td class="text-monospace">0</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <div id="modal-placas">
+            <div class="row mb-3">
+                <div class="col">
+                    <button class="btn btn-primary btn-sm" name="agregar-placa">Agregar Placa</button>
+                </div>
+                <div class="col text-right">
+                    <button class="btn btn-success btn-sm" name="aplicar-totales">Aplicar totales</button>
+                </div>
+            </div>
+            <div class="border">
+                <table class="table table-sm mb-0">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Detalle</th>
+                            <th style="width: 120px;">Gramos</th>
+                            <th style="width: 120px;">Tiempo</th>
+                            <th style="width: 120px;">Unidades</th>
+                            <th style="width: 90px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot class="table-warning">
+                        <tr class="font-weight-bold">
+                            <td>TOTALES X UNIDAD</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td></td>
+                            <td></td>
                         </tr>
                     </tfoot>
                 </table>

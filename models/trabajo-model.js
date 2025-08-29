@@ -45,6 +45,13 @@ const trabajoSchema = new mongoose.Schema({
         cancelado: Boolean // Indica si el archivo fue cancelado o eliminado
     }],
     imagen: String,
+    placasImpresion: [{
+        detalle: String,
+        gramos: Number,
+        minutos: Number,
+        unidades: Number,
+        boquilla: Number
+    }],
     cerrado: Boolean, // Indica si el trabajo está cerrado (no se pueden agregar más cobros o registros)
 }, { timestamps: true });
 

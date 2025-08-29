@@ -1,6 +1,7 @@
 class Resumen{
     constructor(inicializar = false) {
         this.acumuladores = null;
+        this.acumuladorMetodoCobro = null;
         this.trabajos = [];
         this.reinversiones = [];
         this.anioMes = null;
@@ -28,6 +29,15 @@ class Resumen{
         });
         $("[name='verReinversiones']").on("click", () => {
             this.modalVerReinversiones();
+        });
+
+        $("[name='buscar-mes-v2']").on("click", async ev => {
+            let registros = await $.get("/trabajos/obtener-meses-activos");
+            console.log(registros);
+            let resp = await modal.promptSelect({title: "Año/Mes", ar: registros, textProp: "_id", itemsToShow: 30});
+            console.log(resp);
+            $("[name='anioMes']").val(resp._id);
+            $("[name='anioMes']").change();
         });
 
         $("[name='anioMes']").change();
@@ -58,6 +68,8 @@ class Resumen{
             montoBrutoVendidoCobrado: 0, // OK
             montoBrutoVendidoPendiente: 0, // OK
         };
+        
+        this.acumuladorMetodoCobro = {};
 
         this.acumuladores.trabajos = this.trabajos.length;
         this.acumuladores.reinversionEjecutada = this.reinversiones.reduce((acc, reinversion) => acc + reinversion.monto, 0);
@@ -74,12 +86,20 @@ class Resumen{
                 return acc + (cv.costoPorUnidad * registro.cantidad);
             }, 0);
 
+            registro.cobros.forEach(cobro => {
+                if(this.acumuladorMetodoCobro[cobro.metodo]) {
+                    this.acumuladorMetodoCobro[cobro.metodo] += cobro.monto;
+                } else {
+                    this.acumuladorMetodoCobro[cobro.metodo] = cobro.monto;
+                }
+            });
+
             this.acumuladores.montoBrutoVendido += (registro.precioPorUnidad * registro.cantidad);
             this.acumuladores.montoBrutoVendidoCobrado += registro.cobros.reduce((acc, cobro) => acc + cobro.monto, 0);
         });
         this.acumuladores.montoBrutoVendidoPendiente = this.acumuladores.montoBrutoVendido - this.acumuladores.montoBrutoVendidoCobrado;
         this.acumuladores.gananciaNeta = this.acumuladores.montoBrutoVendido - this.acumuladores.costoFilamento - this.acumuladores.costosVarios - this.acumuladores.reinversionGenerada - this.acumuladores.costoElectrico;
-
+        
         $("[name='trabajos']").html(utils.formatNumber(this.acumuladores.trabajos));
         $("[name='unidadesCreadas']").html(utils.formatNumber(this.acumuladores.unidadesCreadas));
         $("[name='ingresosExtra']").html(utils.formatNumber(this.acumuladores.ingresosExtra));
@@ -93,6 +113,18 @@ class Resumen{
         $("[name='montoBrutoVendidoCobrado']").html(utils.formatNumber(this.acumuladores.montoBrutoVendidoCobrado));
         $("[name='montoBrutoVendidoPendiente']").html(utils.formatNumber(this.acumuladores.montoBrutoVendidoPendiente));
         $("[name='gananciaNeta']").html(utils.formatNumber(this.acumuladores.gananciaNeta));
+
+        console.log(this.acumuladorMetodoCobro);
+        let tbodyMetodoCobro = "";
+        for(let cobro in this.acumuladorMetodoCobro) {
+            tbodyMetodoCobro += `
+                <tr>
+                    <td>${cobro}</td>
+                    <td class="text-right font-weight-bold table-warning">${utils.formatNumber(this.acumuladorMetodoCobro[cobro])}</td>
+                </tr>
+            `;
+        }
+        $("[name='tabla-metodo-cobro'] tbody").html(tbodyMetodoCobro);
     }
     modalEjecutarReinversion() {
         let fox = $("#modal-ejecutar-reinversion").html();

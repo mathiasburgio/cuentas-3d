@@ -5,6 +5,7 @@ class Trabajos{
         this.trabajoActual = null;
         
         this.imagenTrabajo = null;
+        this.placasTrabajo = [];
         this.accion = null;
         if(inicializar) this.init();
     }
@@ -16,6 +17,7 @@ class Trabajos{
             this.limpiarTodo();
             this.accion = "nuevo";
             this.imagenTrabajo = null;
+            this.placasTrabajo =  [];
 
             $("[name='fecha']").val(fechas.getNow(false));
             $("[name='fechaEntrega']").val(fechas.getNow(false));
@@ -42,6 +44,18 @@ class Trabajos{
         $("[name='guardar']").on("click", (e) => {
             if(this.accion == null) return;
             this.guardarTrabajo();
+        });
+
+        $("[name='cantidad']").on("change", ev=>{
+            //recalculo cositas
+            if( $("[name='precioPorUnidad']").val() ) $("[name='precioPorUnidad']").change();
+            else if( $("[name='precioTotal']").val() ) $("[name='precioTotal']").change();
+            
+            if( $("[name='pesoFilamentoUnidad']").val() ) $("[name='pesoFilamentoUnidad']").change();
+            else if( $("[name='pesoFilamentoTotal']").val() ) $("[name='pesoFilamentoTotal']").change();
+            
+            if( $("[name='tiempoImpresionUnidad']").val() ) $("[name='tiempoImpresionUnidad']").change();
+            else if( $("[name='tiempoImpresionTotal']").val() ) $("[name='tiempoImpresionTotal']").change();
         });
 
         $("[name='precioPorUnidad']").on("change", ev=>{
@@ -156,6 +170,13 @@ class Trabajos{
             if(!prompt) return;
             this.obtenerTrabajos(1, prompt + "-05");
         });
+        $("[name='filtro-seleccionar-anio-mes-v2']").on("click", async ev=>{
+            let registros = await $.get("/trabajos/obtener-meses-activos");
+            console.log(registros);
+            let resp = await modal.promptSelect({title: "Año/Mes", ar: registros, textProp: "_id", itemsToShow: 30});
+            console.log(resp);
+            this.obtenerTrabajos(1, resp._id + "-05");
+        });
 
         $("[name='imagen-trabajo']").on("change", async ev=>{
             let file = ev.target.files[0];
@@ -178,6 +199,11 @@ class Trabajos{
             trigger: "hover"
         })
 
+        $("[name='asignar-placas']").on("click", ev=>{
+            //if(!this.trabajoActual) return modal.message("Seleccione un trabajo primero");
+            this.modalAsignarPlacas();
+        });
+
 
         this.obtenerTrabajos();
     }
@@ -196,7 +222,11 @@ class Trabajos{
             return trabajo.nombre.toLowerCase().includes(palabra) || 
             trabajo.cliente.nombre.toLowerCase().includes(palabra);
         })
-        .sort((a, b) => b.fecha.toString().localeCompare(a.fecha.toString()))
+        .sort((a, b) =>{
+            let comp = b.fecha.toString().localeCompare(a.fecha.toString());
+            if(comp == 0) return b.createdAt.toString().localeCompare(a.createdAt.toString());
+            else return comp;
+        })
         .forEach(trabajo => {
 
 
@@ -231,6 +261,7 @@ class Trabajos{
             this.trabajoActual = this.listadoTrabajos.find(t => t._id === trabajoId);
             if(!this.trabajoActual) return;
             this.imagenTrabajo = this.trabajoActual.imagen;
+            this.placasTrabajo = this.trabajoActual.placasImpresion;
 
             this.accion = "modificar";
             $("[name='nuevo']").removeClass("btn-primary").addClass("btn-light");
@@ -303,6 +334,7 @@ class Trabajos{
             data.fecha = data.fecha + "T08:00";
             data.fechaEntrega = data.fechaEntrega + "T08:00";
             data.imagen = this.imagenTrabajo;
+            data.placasImpresion = this.placasTrabajo;
 
             let resp = await $.post({
                 url: "/trabajos/guardar-trabajo" + (this.accion === "modificar" ? `/${this.trabajoActual._id}` : ""),
@@ -329,6 +361,7 @@ class Trabajos{
     completarDatosTrabajo(){
         $("[name='datos'] input, [name='datos'] select").each((i, input) => {
             let name = $(input).attr("name");
+            $(input).val(null);//limpio el campo
             if($(input).attr("type") === "date") return;
             if($(input).attr("type") === "file") return;
 
@@ -810,5 +843,90 @@ class Trabajos{
         });
 
         actualizarTabla();
+    }
+
+    modalAsignarPlacas(){
+        let fox = $("#modal-placas").html();
+        modal.show({
+            title: "Placas",
+            body: fox,
+            size: "lg",
+            buttons: "back"
+        });
+
+        let sumaGramosPorUnidad = 0;
+        let sumaMinutosPorUnidad = 0;
+        
+        const listarPlacas = () => {
+            
+            sumaGramosPorUnidad = 0;
+            sumaMinutosPorUnidad = 0;
+            
+            let html = "";
+            this.placasTrabajo.forEach((placa, ind)=>{
+                if(placa?.tiempo){
+                    let [hora, min] = placa.tiempo.split(":");
+                    placa.minutos = (parseInt(hora) * 60) + parseInt(min);
+                }else if(placa?.minutos){
+                    let [hora, min] = [Math.floor(placa.minutos / 60), placa.minutos % 60];
+                    placa.tiempo = hora.toString().padStart(2, "0") + ":" + min.toString().padStart(2, "0");
+                }else{
+                    placa.tiempo = "00:10";
+                    placa.minutos = 10;
+                }
+
+                sumaGramosPorUnidad += placa.gramos / (placa.unidades || 0);
+                sumaMinutosPorUnidad += placa.minutos / (placa.unidades || 0);
+
+                html += `<tr ind="${ind}">
+                    <td><input class='form-control form-control-sm' name="detalle" type="text" value="${placa.detalle}"></td>
+                    <td><input class='form-control form-control-sm' name="gramos" type="number" value="${placa.gramos}"></td>
+                    <td><input class='form-control form-control-sm' name="tiempo" type="time" value="${placa.tiempo}"></td>
+                    <td><input class='form-control form-control-sm' name="unidades" type="number" value="${placa.unidades}"></td>
+                    <td><button class="btn btn-danger btn-sm" name="eliminar-placa">Eliminar</button></td>
+                </tr>`;
+            })
+            $("#modal table tbody").html(html);
+            $("#modal table tfoot td:eq(1)").html(utils.formatNumber(sumaGramosPorUnidad) + " gr");
+            $("#modal table tfoot td:eq(2)").html(utils.formatNumber(sumaMinutosPorUnidad) + " min");
+
+            $("#modal tbody [name]").on("change", ev=>{
+                let row = $(ev.currentTarget).closest("tr");
+                let ind = parseInt(row.attr("ind"));
+                let d = {
+                    detalle: row.find("[name='detalle']").val(),
+                    gramos: parseInt(row.find("[name='gramos']").val()),
+                    tiempo: row.find("[name='tiempo']").val(),
+                    unidades: parseInt(row.find("[name='unidades']").val())
+                };
+                this.placasTrabajo[ind] = d;
+                listarPlacas();
+            });
+
+            $("#modal tbody [name='eliminar-placa']").on("click", async ev=>{
+                let ele = $(ev.currentTarget).closest("tr");
+                let ind = ele.attr("ind");
+                let confirm = await modal.addPopover({querySelector: ele, type: "yesno", message: "¿Eliminar placa?"});
+                if(!confirm) return;
+                this.placasTrabajo.splice(ind, 1);
+                listarPlacas();
+            })
+        }
+
+
+        $("#modal [name='agregar-placa']").on("click", ev=>{
+            this.placasTrabajo.push({detalle: "sin detalle", gramos: 0, tiempo: "00:10", unidades: 1});
+            listarPlacas();
+        })
+
+        $("#modal [name='aplicar-totales']").on("click", ()=>{
+            $("[name='datos'] [name='pesoFilamentoUnidad']").val(parseInt(sumaGramosPorUnidad || 0));
+            $("[name='datos'] [name='tiempoImpresionUnidad']").val(parseInt(sumaMinutosPorUnidad || 0));
+            $("[name='datos'] [name='pesoFilamentoUnidad']").change();
+            $("[name='datos'] [name='tiempoImpresionUnidad']").change();
+            modal.hide();
+        });
+
+        listarPlacas();
     }
 }

@@ -49,13 +49,21 @@
                     <div class="card-body">
 
                         <div class="row">
+                            <div class="col-auto pt-1">
+                               <b>Mes filtrado:</b>
+                            </div>
                             <div class="col-4">
-                                <input type="month" name="anioMes" class="form-control form-control-sm">
+                                <div class="input-group input-group-sm">
+                                    <input type="month" name="anioMes" class="form-control form-control-sm">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-info" name="buscar-mes-v2"><i class="fas fa-search"></i></button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
                         <div class="border mt-3">
-                            <table class="table table-sm table-striped table-hover mb-0">
+                            <table name="tabla-resumen" class="table table-sm table-striped table-hover mb-0">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>Detalle</th>
@@ -116,6 +124,18 @@
                                         <td class="text-right text-monospace table-warning" name="gananciaNeta">0</td>
                                     </tr>
                                 </tbody>
+                            </table>
+                        </div>
+
+                        <div class="border mt-5">
+                            <table name="tabla-metodo-cobro" class="table table-sm table-striped table-hover mb-0">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Método de cobro</th>
+                                        <th class="text-right">Monto</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
                             </table>
                         </div>
                     </div>

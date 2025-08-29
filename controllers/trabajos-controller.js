@@ -236,6 +236,21 @@ async function subirImagen(req, res){
         res.status(500).end(error.toString());
     }
 }
+async function obtenerMesesActivos(req, res){
+    //obtengo los meses q tienen registros
+    let registros = await Trabajo.aggregate([
+        {
+            $group: {
+                _id: { $substr: ["$fecha", 0, 7] }, // Agrupo por año y mes
+                total: { $sum: 1 }
+            }
+        },
+        {
+            $sort: { _id: -1 }
+        }
+    ]);
+    res.status(200).json(registros);
+}
 
 module.exports = {
     obtenerVista,
@@ -246,5 +261,6 @@ module.exports = {
     agregarArchivo,
     agregarCosto,
     cerrarTrabajo,
-    subirImagen
+    subirImagen,
+    obtenerMesesActivos
 };
