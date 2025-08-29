@@ -244,7 +244,7 @@ class Trabajos{
             tbody += `<tr _id="${trabajo._id}" class='cp'>
                 <td><i class='fas fa-${trabajo.cerrado ? "lock text-danger" : "lock-open"}'></i></td>
                 <td class='text-right'><small>${trabajo.fecha ? fechas.parse2(trabajo.fecha, "USA_FECHA") : "?"}</small></td>
-                <td>${trabajo.nombre} (${trabajo.cliente.nombre})</td>
+                <td class='td-ellipsis'>${trabajo.nombre} (${trabajo.cliente.nombre})</td>
                 <td class='text-right'>
                     <span class='badge badge-${colorCobro}'>$</span>
                     <span class='badge badge-${colorEstado}'>${trabajo.estado}</span>
