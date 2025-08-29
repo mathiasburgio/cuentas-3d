@@ -274,6 +274,8 @@ class Trabajos{
             };
             $("[name='datos'] input, [name='datos'] select").each((i, input) => {
                 let name = $(input).attr("name");
+                if(name== "imagen-trabajo") return; //la imagen se guarda aparte
+                
                 if(name){
                     if(name.startsWith("cliente.")){
                         let clienteField = name.split(".")[1];

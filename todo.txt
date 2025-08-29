@@ -1,4 +1,4 @@
--agregar todo list
+⚠️-agregar todo list no será incluido, ya tiene el historial.
 -editar grupo, nombre y detalle de archivos
 -que un modelo pueda tener varias partes y que el peso y tiempo sea la suma de todas sus partes. Ej vaso + tapa
 ✅-categoria de trabajo (llaveros, muñecos, decoracion, etc)
@@ -7,3 +7,5 @@
 ✅-filtro de trabajos por mes
 ✅-orden trabajos por fecha
 ✅-% de ganancia del trabajo completo
+-en archivos (tanto de un proyecto, como generales) agregar notas. Ej. Imprimir con boquilla 0.2, verificar tal o cual cosa, etc.
+-al descargar un archivo q conserve un nombre descriptivo
