@@ -275,13 +275,13 @@ class Trabajos{
             $("[name='datos'] input, [name='datos'] select").each((i, input) => {
                 let name = $(input).attr("name");
                 if(name== "imagen-trabajo") return; //la imagen se guarda aparte
-                
+
                 if(name){
                     if(name.startsWith("cliente.")){
                         let clienteField = name.split(".")[1];
-                        data.cliente[clienteField] = $(input).val().trim();
+                        data.cliente[clienteField] = ($(input).val() || "").toString().trim();
                     }else{
-                        data[name] = $(input).val().trim();
+                        data[name] = ($(input).val() || "").toString().trim();
                     }
                 }
             });
