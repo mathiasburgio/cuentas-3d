@@ -39,7 +39,7 @@
 
     <div class="container-fluid">
 
-        <div class="card">
+        <div class="card mt-3">
             <div class="card-body" name="protocolos">
 
             </div>
@@ -63,9 +63,13 @@
         var utils = new Utils();
 
         window.onload = () => {
-            $.get("/resources/protocolos.md").then(ret=>{
-                $("div[name='protocolos']").html( marked.parse(ret) );
+            $.get("/resources/protocolos.html").then(ret=>{
+                $("div[name='protocolos']").html( ret );
             });
+
+            /* $.get("/resources/protocolos.md").then(ret=>{
+                $("div[name='protocolos']").html( marked.parse(ret) );
+            }); */
         }
     </script>
 </body>
